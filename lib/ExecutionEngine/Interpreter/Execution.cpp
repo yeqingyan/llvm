@@ -1812,6 +1812,18 @@ void Interpreter::visitInsertElementInst(InsertElementInst &I) {
   SetValue(&I, Dest, SF);
 }
 
+//===----------------------------------------------------------------------===//
+//                        Misc Instructions
+//===----------------------------------------------------------------------===//
+void Interpreter::visitInc42Inst(Inc42Inst &I) {
+  ExecutionContext &SF = ECStack.back();
+  GenericValue Src1 = getOperandValue(I.getOperand(0), SF);
+  GenericValue R;   // Result
+
+  R.IntVal = Src1.IntVal + *(new APInt(32, 42, true));
+  SetValue(&I, R, SF);
+}
+
 void Interpreter::visitShuffleVectorInst(ShuffleVectorInst &I){
   ExecutionContext &SF = ECStack.back();
 
@@ -2065,6 +2077,7 @@ GenericValue Interpreter::getOperandValue(Value *V, ExecutionContext &SF) {
     return SF.Values[V];
   }
 }
+
 
 //===----------------------------------------------------------------------===//
 //                        Dispatch and Execution Code

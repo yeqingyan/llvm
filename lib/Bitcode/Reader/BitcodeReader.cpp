@@ -5294,6 +5294,17 @@ std::error_code BitcodeReader::parseFunctionBody(Function *F) {
       InstructionList.push_back(I);
       break;
     }
+
+    case bitc::FUNC_CODE_INST_INC42: {
+      unsigned OpNum = 0;
+      Value *Op;
+      if (getValueTypePair(Record, OpNum, NextValueNo, Op))
+        return error("Invalid record");
+      I = new Inc42Inst(Op);
+      InstructionList.push_back(I);
+      break;
+    }
+
     case bitc::FUNC_CODE_INST_LOADATOMIC: {
        // LOADATOMIC: [opty, op, align, vol, ordering, synchscope]
       unsigned OpNum = 0;

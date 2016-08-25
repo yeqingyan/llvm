@@ -868,6 +868,7 @@ private:
   void visitExtractValue(const ExtractValueInst &I);
   void visitInsertValue(const InsertValueInst &I);
   void visitLandingPad(const LandingPadInst &I);
+  void visitInc42(const Inc42Inst &I);
 
   void visitGetElementPtr(const User &I);
   void visitSelect(const User &I);

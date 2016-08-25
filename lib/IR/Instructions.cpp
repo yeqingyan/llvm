@@ -3881,6 +3881,13 @@ void IndirectBrInst::setSuccessorV(unsigned idx, BasicBlock *B) {
 }
 
 //===----------------------------------------------------------------------===//
+//                        IndirectBrInst Implementation
+//===----------------------------------------------------------------------===//
+
+Inc42Inst::Inc42Inst(Value *V)
+    : UnaryInstruction(V->getType(), Instruction::Inc42, V) {}
+
+//===----------------------------------------------------------------------===//
 //                           cloneImpl() implementations
 //===----------------------------------------------------------------------===//
 
@@ -4058,6 +4065,10 @@ InvokeInst *InvokeInst::cloneImpl() const {
     return new(getNumOperands(), DescriptorBytes) InvokeInst(*this);
   }
   return new(getNumOperands()) InvokeInst(*this);
+}
+
+Inc42Inst *Inc42Inst::cloneImpl() const {
+  return new Inc42Inst(getOperand(0));
 }
 
 ResumeInst *ResumeInst::cloneImpl() const { return new (1) ResumeInst(*this); }

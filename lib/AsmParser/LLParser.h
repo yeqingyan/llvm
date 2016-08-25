@@ -486,6 +486,7 @@ namespace llvm {
     bool ParseShuffleVector(Instruction *&I, PerFunctionState &PFS);
     int ParsePHI(Instruction *&I, PerFunctionState &PFS);
     bool ParseLandingPad(Instruction *&I, PerFunctionState &PFS);
+    int ParseInc42(Instruction *&I, PerFunctionState &PFS);
     bool ParseCall(Instruction *&I, PerFunctionState &PFS,
                    CallInst::TailCallKind IsTail);
     int ParseAlloc(Instruction *&I, PerFunctionState &PFS);

@@ -338,6 +338,7 @@ const char *Instruction::getOpcodeName(unsigned OpCode) {
   case InsertValue:    return "insertvalue";
   case LandingPad:     return "landingpad";
   case CleanupPad:     return "cleanuppad";
+  case Inc42:          return "inc42";
 
   default: return "<Invalid operator> ";
   }

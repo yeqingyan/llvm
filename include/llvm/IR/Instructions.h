@@ -4922,6 +4922,31 @@ public:
   }
 };
 
+//===----------------------------------------------------------------------===//
+//                          Inc42Inst Class
+//===----------------------------------------------------------------------===//
+
+class Inc42Inst : public UnaryInstruction {
+protected:
+  // Note: Instruction needs to be a friend here to call cloneImpl.
+  friend class Instruction;
+
+  Inc42Inst *cloneImpl() const;
+
+public:
+  Inc42Inst(Value *S1);
+
+  // Transparently provide more efficient getOperand methods.
+  DECLARE_TRANSPARENT_OPERAND_ACCESSORS(Value);
+
+};
+
+template <>
+struct OperandTraits<Inc42Inst> :
+  public FixedNumOperandTraits<Inc42Inst, 1> {
+};
+
+DEFINE_TRANSPARENT_OPERAND_ACCESSORS(Inc42Inst, Value)
 } // End llvm namespace
 
 #endif

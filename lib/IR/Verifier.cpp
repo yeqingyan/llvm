@@ -427,6 +427,7 @@ private:
   void visitFuncletPadInst(FuncletPadInst &FPI);
   void visitCatchSwitchInst(CatchSwitchInst &CatchSwitch);
   void visitCleanupReturnInst(CleanupReturnInst &CRI);
+  void visitInc42Inst(Inc42Inst &I);
 
   void verifyCallSite(CallSite CS);
   void verifySwiftErrorCallSite(CallSite CS, const Value *SwiftErrorVal);
@@ -3578,6 +3579,10 @@ void Verifier::visitCleanupReturnInst(CleanupReturnInst &CRI) {
   }
 
   visitTerminatorInst(CRI);
+}
+
+void Verifier::visitInc42Inst(Inc42Inst &I) {
+  visitInstruction(I);
 }
 
 void Verifier::verifyDominatesUse(Instruction &I, unsigned i) {

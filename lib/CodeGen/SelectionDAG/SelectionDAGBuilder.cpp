@@ -2375,6 +2375,45 @@ void SelectionDAGBuilder::visitLandingPad(const LandingPadInst &LP) {
   setValue(&LP, Res);
 }
 
+void SelectionDAGBuilder::visitInc42(const Inc42Inst &I) {
+  // Follow SelectionDAGBuilder::visitBinary
+  SDValue Op1 = getValue(I.getOperand(0));
+  SDValue Op2 = getValue(ConstantInt::get(Type::getInt32Ty(I.getContext()), 42));
+
+  bool nuw = false;
+  bool nsw = false;
+  bool exact = false;
+  bool vec_redux = false;
+  FastMathFlags FMF;
+
+  if (const OverflowingBinaryOperator *OFBinOp =
+      dyn_cast<const OverflowingBinaryOperator>(&I)) {
+    nuw = OFBinOp->hasNoUnsignedWrap();
+    nsw = OFBinOp->hasNoSignedWrap();
+  }
+  if (const PossiblyExactOperator *ExactOp =
+      dyn_cast<const PossiblyExactOperator>(&I))
+    exact = ExactOp->isExact();
+  if (const FPMathOperator *FPOp = dyn_cast<const FPMathOperator>(&I))
+    FMF = FPOp->getFastMathFlags();
+
+  SDNodeFlags Flags;
+  Flags.setExact(exact);
+  Flags.setNoSignedWrap(nsw);
+  Flags.setNoUnsignedWrap(nuw);
+  Flags.setVectorReduction(vec_redux);
+  if (EnableFMFInDAG) {
+    Flags.setAllowReciprocal(FMF.allowReciprocal());
+    Flags.setNoInfs(FMF.noInfs());
+    Flags.setNoNaNs(FMF.noNaNs());
+    Flags.setNoSignedZeros(FMF.noSignedZeros());
+    Flags.setUnsafeAlgebra(FMF.unsafeAlgebra());
+  }
+  SDValue BinNodeValue = DAG.getNode(ISD::ADD, getCurSDLoc(), Op1.getValueType(),
+                                     Op1, Op2, &Flags);
+  setValue(&I, BinNodeValue);
+}
+
 void SelectionDAGBuilder::sortAndRangeify(CaseClusterVector &Clusters) {
 #ifndef NDEBUG
   for (const CaseCluster &CC : Clusters)
